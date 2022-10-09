@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/SuperMya/3179-bubble/main/data/data_filter.csv"
+  },
+  "vconcat": [
+    {
+      "width": 500,
+      "height": 400,
+      "title": "Association of different countries and ages with acceptance rates of violence",
+      "mark": "circle",
+      "encoding": {
+        "x": {
+          "field": "Survey Year",
+          "type": "ordinal",
+          "title": "Year",
+          "axis": {"tickCount": 7},
+          "timeUnit": "year",
+          "scale": {"domain": {"param": "time_brush"}}
+        },
+        "y": {
+          "field": "Value%",
+          "type": "quantitative",
+          "axis": {"tickCount": 6},
+          "scale": {"type": "linear", "domain": [1, 100]}
+        },
+        "color": {"field": "Country", "type": "nominal"},
+        "size": {
+          "field": "Demographics Response",
+          "type": "nominal",
+          "scale": {
+            "domain": ["15-24", "25-34", "35-49"],
+            "range": [15, 80, 150]
+          }
+        },
+        "tooltip": [
+          {"field": "Country", "type": "nominal"},
+          {"field": "Value%", "type": "quantitative", "format": ","},
+          {"field": "Demographics Response", "type": "nominal"}
+        ]
+      }
+    },
+    {
+      "width": 600,
+      "height": 60,
+      "mark": "line",
+      "params": [
+        {
+          "name": "time_brush",
+          "select": {"type": "interval", "encodings": ["x"]}
+        }
+      ],
+      "encoding": {
+        "x": {
+          "field": "Survey Year",
+          "timeUnit": "yearmonth",
+          "axis": {"title": "year", "format": "%Y"}
+        },
+        "y": {
+          "aggregate": "count",
+          "axis": {"tickCount": 3, "grid": false},
+          "title": "Count"
+        }
+      }
+    }
+  ],
+  "config": {}
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
